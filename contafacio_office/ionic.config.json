@@ -1,5 +1,7 @@
 {
   "name": "contafacio_office",
-  "integrations": {},
+  "integrations": {
+    "capacitor": {}
+  },
   "type": "angular"
 }
