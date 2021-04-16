@@ -8,21 +8,27 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content>
-  <ion-list>
-    <ion-item-sliding>
+<ion-content [fullscreen]="true">
+  <ion-list class="animated bounceInUp">
+    <ion-item-sliding *ngFor="let certificado of certificados">
       <ion-item>
         <ion-label>
-          <h2>Nome do Certificado</h2>
-          <h3>Validade</h3>
-          <p>Status</p>
+          <h2>{{certificado.name}}</h2>
+          <h3>{{certificado.vencimento}}</h3>
+          <p>{{certificado.situacao}}</p>
         </ion-label>
       </ion-item>
       <ion-item-options side="end">
         <ion-item-option color="success">Enviar</ion-item-option>
         <ion-item-option>Editar</ion-item-option>
-        <ion-item-option color="danger">Excluir</ion-item-option>
+        <ion-item-option color="danger" (click)="delete(certificado)">Excluir</ion-item-option>
       </ion-item-options>
     </ion-item-sliding>
   </ion-list>
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+    <ion-fab-button (click)="showNew()">
+      <ion-icon name="add"></ion-icon>
+    </ion-fab-button>
+
+  </ion-fab>
 </ion-content>
