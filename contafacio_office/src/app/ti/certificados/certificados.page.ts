@@ -1,27 +1,39 @@
+import { HttpClientModule } from '@angular/common/http';
 import { Message } from '@angular/compiler/src/i18n/i18n_ast';
 import { Component, OnInit } from '@angular/core';
 import { AlertController, ToastController } from '@ionic/angular';
+import { HttpClient } from '@angular/common/http';
+import { Cert, CertiService } from 'src/app/servico/certi.service';
+import { NgForm } from '@angular/forms';
 
 @Component({
   selector: 'app-certificados',
   templateUrl: './certificados.page.html',
   styleUrls: ['./certificados.page.scss'],
 })
+
+
 export class CertificadosPage implements OnInit {
+cert: Cert[];
 
-  certificados : any[] = [];
-
-  constructor(private alertctrl: AlertController, private toastCtrl: ToastController) {
+  certification : any[] = [];
+  
+  
+  constructor(private alertctrl: AlertController, private toastCtrl: ToastController, private service: CertiService) {
     let certificadoJson = localStorage.getItem('certificadosDb');
 
     if(certificadoJson != null){
-      this.certificados = JSON.parse(certificadoJson);
+      this.certification = JSON.parse(certificadoJson);
     }
 
    }
 
 
   ngOnInit() {
+    this.service.getAll().subscribe(response => {
+      console.log(response);
+      this.cert = response;
+    });
   }
 
   async alert() {
@@ -99,15 +111,21 @@ export class CertificadosPage implements OnInit {
         {
           text: 'Salvar',
           handler: (data) => {
+            console.log(data.value);
             console.log(data.newCertificado);
-            console.log(data.cnpj);
-            this.add(data.newCertificado, data.cnpj, data.email, data.vencimento, data.situacao);
+           console.log(data.cnpj);
+           this.add(data.newCertificado, data.cnpj, data.email, data.vencimento, data.situacao);
             
           }
         }
       ]
     });
     showNew.present();
+  }
+
+  enviando(data: NgForm){
+    console.log(data.value);
+
   }
   async add(newCertificado: string, cnpj: string, email:string, vencimento: Date, situacao: string) {
     //valida se o usuario preencheu o campo
@@ -121,17 +139,29 @@ export class CertificadosPage implements OnInit {
       return;
     }
 
-    let certificado = {name: newCertificado, cnpj: cnpj, email: email, vencimento: vencimento, situacao: situacao, done: false};
-    this.certificados.push(certificado);
+    let certificado = {certificados: newCertificado, cnpj: cnpj, email: email, vencimento: vencimento, situacao: situacao, done: false};
+    this.certification.push(certificado);
     this.updateLocalStorage();
   }
 
   updateLocalStorage(){
-    localStorage.setItem('certificadosDb',JSON.stringify(this.certificados));
+    localStorage.setItem('certificadosDb',JSON.stringify(this.certification));
   }
 
-  delete(certificado : any){
-    this.certificados = this.certificados.filter(certificadoArray=> certificado != certificadoArray)
+ /* delete(certificado : any){
+    this.certification = this.certification.filter(certificadoArray=> certificado != certificadoArray)
     this.updateLocalStorage();
+  } */
+
+  remove(id: any){
+    //console.log(id);
+    this.service.remove(id).subscribe(() => {
+     // this.cert = this.cert.filter(idcert => idcert.id ! == id);
+     this.service.getAll().subscribe(response => {
+      this.cert = response;
+     })
+    })
   }
+
+
 }
