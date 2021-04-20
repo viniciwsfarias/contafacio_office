@@ -7,6 +7,10 @@ const routes: Routes = [
   {
     path: '',
     component: CertificadosPage
+  },
+  {
+    path: 'modal-cert',
+    loadChildren: () => import('./modal-cert/modal-cert.module').then( m => m.ModalCertPageModule)
   }
 ];
 

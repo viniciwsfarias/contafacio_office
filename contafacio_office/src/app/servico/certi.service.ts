@@ -25,4 +25,10 @@ export class CertiService {
     return this.http.delete(this.url + '?id=' + id);
     
   }
+  create(cert: Cert){
+    return this.http.post(this.url, cert);
+  }
+  getId(id: any, email: any){
+    return this.http.get(this.url + '?id=' + id).toPromise();
+  }
 }

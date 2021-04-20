@@ -39,6 +39,10 @@ const routes: Routes = [
     path: 'legalizacao',
     loadChildren: () => import('./legalizacao/legalizacao.module').then( m => m.LegalizacaoPageModule)
   },
+  {
+    path: 'modal-cert',
+    loadChildren: () => import('./ti/certificados/modal-cert/modal-cert.module').then( m => m.ModalCertPageModule)
+  },
 
 
 ];

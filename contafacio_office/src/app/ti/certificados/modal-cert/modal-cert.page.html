@@ -1,0 +1,34 @@
+<ion-header>
+ 
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-back-button></ion-back-button>
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-button slot="end" (click)="fecharModal()">Fechar</ion-button>
+    <ion-title>Novo Certificado</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+ <form #f="ngForm" (ngSubmit)="enviando(f)">
+   <ion-item>
+     <ion-label position="floating">CERTIFICADO</ion-label>
+     <ion-input ngModel name="certificados"></ion-input>
+   </ion-item>
+   <ion-item>
+    <ion-label position="floating">CNPJ</ion-label>
+    <ion-input ngModel name="cnpj"></ion-input>
+  </ion-item>
+  <ion-item>
+    <ion-label position="floating">EMAIL</ion-label>
+    <ion-input ngModel name="email"></ion-input>
+  </ion-item>
+  <ion-item>
+    <ion-label position="floating"></ion-label>
+    <ion-input ngModel name="vencimento" type="date"></ion-input>
+  </ion-item>
+  <ion-button fill="outline" expand="block" type="submit">Cadastrar</ion-button>
+
+ </form>
+</ion-content>

@@ -1,10 +1,11 @@
 import { HttpClientModule } from '@angular/common/http';
 import { Message } from '@angular/compiler/src/i18n/i18n_ast';
 import { Component, OnInit } from '@angular/core';
-import { AlertController, ToastController } from '@ionic/angular';
+import { AlertController, ModalController, ToastController } from '@ionic/angular';
 import { HttpClient } from '@angular/common/http';
 import { Cert, CertiService } from 'src/app/servico/certi.service';
 import { NgForm } from '@angular/forms';
+import { ModalCertPage } from './modal-cert/modal-cert.page';
 
 @Component({
   selector: 'app-certificados',
@@ -15,11 +16,13 @@ import { NgForm } from '@angular/forms';
 
 export class CertificadosPage implements OnInit {
 cert: Cert[];
+msg : any;
 
   certification : any[] = [];
   
   
-  constructor(private alertctrl: AlertController, private toastCtrl: ToastController, private service: CertiService) {
+  constructor(private alertctrl: AlertController, private toastCtrl: ToastController, private service: CertiService, 
+    private modalCtrl: ModalController) {
     let certificadoJson = localStorage.getItem('certificadosDb');
 
     if(certificadoJson != null){
@@ -31,7 +34,6 @@ cert: Cert[];
 
   ngOnInit() {
     this.service.getAll().subscribe(response => {
-      console.log(response);
       this.cert = response;
     });
   }
@@ -70,91 +72,23 @@ cert: Cert[];
     });
     alert.present();
   }
-  async showNew() {
-    const showNew = await this.alertctrl.create({
-      header: 'Cadastro de Certificados',
-      inputs: [
-        {
-          name: 'newCertificado',
-          type: 'text',
-          placeholder: 'Certificados'
-        },
-        {
-          name: 'cnpj',
-          type: 'text',
-          placeholder: 'CNPJ'
-        },
-        {
-          name: 'email',
-          type: 'text',
-          placeholder: 'email'
-        },
-        {
-          name: 'vencimento',
-          type: 'date',
-          placeholder: 'Vencimento'
-        },
-        {
-          name: 'situacao',
-          type: 'text',
-          placeholder: 'Situação'
-        },
-      ],
-      buttons: [
-        {
-          text: 'Cancelar',
-          role: 'cancelar',
-          handler: data => {
-            console.log('Cancel clicked');
-          }
-        },
-        {
-          text: 'Salvar',
-          handler: (data) => {
-            console.log(data.value);
-            console.log(data.newCertificado);
-           console.log(data.cnpj);
-           this.add(data.newCertificado, data.cnpj, data.email, data.vencimento, data.situacao);
-            
-          }
-        }
-      ]
-    });
-    showNew.present();
+
+  newCert(){
+    this.modalCtrl.create({
+      component: ModalCertPage
+    }).then(modal => {
+      modal.present();
+      return modal.onDidDismiss();
+    }).then(({data}) =>{
+      //console.log(data);
+      this.service.getAll().subscribe(response => {
+        this.cert = response;
+      })
+    })
+    
   }
-
-  enviando(data: NgForm){
-    console.log(data.value);
-
-  }
-  async add(newCertificado: string, cnpj: string, email:string, vencimento: Date, situacao: string) {
-    //valida se o usuario preencheu o campo
-    if (newCertificado.trim().length < 1) {
-      const toast = await this.toastCtrl.create({
-        message: 'Por favor, preencher campo.',
-        duration: 2000,
-        position: 'top'
-      });
-      toast.present();
-      return;
-    }
-
-    let certificado = {certificados: newCertificado, cnpj: cnpj, email: email, vencimento: vencimento, situacao: situacao, done: false};
-    this.certification.push(certificado);
-    this.updateLocalStorage();
-  }
-
-  updateLocalStorage(){
-    localStorage.setItem('certificadosDb',JSON.stringify(this.certification));
-  }
-
- /* delete(certificado : any){
-    this.certification = this.certification.filter(certificadoArray=> certificado != certificadoArray)
-    this.updateLocalStorage();
-  } */
 
   remove(id: any){
-    //console.log(id);
     this.service.remove(id).subscribe(() => {
      // this.cert = this.cert.filter(idcert => idcert.id ! == id);
      this.service.getAll().subscribe(response => {
@@ -163,5 +97,12 @@ cert: Cert[];
     })
   }
 
+  enviarEmail(id: any, email: any){
+    this.service.getId(id, email)
+    .then((json) => {
+      this.msg = (json);
+      console.log(json);
+    })
+  }
 
 }
