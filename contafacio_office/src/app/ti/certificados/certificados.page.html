@@ -15,8 +15,9 @@
       <ion-item>
         <ion-label>
           <h2>{{c.certificados}}</h2>
-          <h3>{{c.vencimento}}</h3>
-          <p>{{c.situacao}}</p>
+          <p>{{c.vencimento}}</p>
+          <p>{{c.email}}</p>
+          <ion-badge color={{cor}}>{{c.situacao}}</ion-badge>
         </ion-label>
       </ion-item>
       <ion-item-options side="end">
@@ -26,5 +27,4 @@
       </ion-item-options>
     </ion-item-sliding>
   </ion-list>
-  
 </ion-content>

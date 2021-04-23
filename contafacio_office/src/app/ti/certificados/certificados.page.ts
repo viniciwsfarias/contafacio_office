@@ -6,6 +6,8 @@ import { HttpClient } from '@angular/common/http';
 import { Cert, CertiService } from 'src/app/servico/certi.service';
 import { NgForm } from '@angular/forms';
 import { ModalCertPage } from './modal-cert/modal-cert.page';
+import { ThrowStmt } from '@angular/compiler';
+
 
 @Component({
   selector: 'app-certificados',
@@ -17,6 +19,8 @@ import { ModalCertPage } from './modal-cert/modal-cert.page';
 export class CertificadosPage implements OnInit {
 cert: Cert[];
 msg : any;
+cor: any;
+day: any;
 
   certification : any[] = [];
   
@@ -36,6 +40,7 @@ msg : any;
     this.service.getAll().subscribe(response => {
       this.cert = response;
     });
+
   }
 
   async alert() {
@@ -104,5 +109,8 @@ msg : any;
       console.log(json);
     })
   }
+
+  
+
 
 }
