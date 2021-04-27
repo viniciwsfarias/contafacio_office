@@ -11,6 +11,7 @@ export interface Cert{
   situacao: string;
   status: any;
   dias: number;
+  cor: any;
   
 }
 
@@ -21,6 +22,7 @@ export interface Cert{
 export class CertiService {
   private url = "http://contafacio.com.br/api/certificados.php";
   private url2 = "http://contafacio.com.br/api/email.php";
+  params: any;
 
   constructor(private http: HttpClient) { }
 
@@ -36,6 +38,10 @@ export class CertiService {
   }
   getId(id: any, email: any){
     return this.http.get(this.url2 + '?id=' + id + '&email=' + email).toPromise();
+  }
+
+  getColor(){
+    return this.http.get<[Cert]>(this.url);
   }
 
 

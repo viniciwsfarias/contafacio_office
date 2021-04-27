@@ -1,6 +1,6 @@
 import { HttpClientModule } from '@angular/common/http';
 import { Message } from '@angular/compiler/src/i18n/i18n_ast';
-import { Component, OnInit } from '@angular/core';
+import { Component, ComponentFactoryResolver, OnInit } from '@angular/core';
 import { AlertController, ModalController, ToastController } from '@ionic/angular';
 import { HttpClient } from '@angular/common/http';
 import { Cert, CertiService } from 'src/app/servico/certi.service';
@@ -19,8 +19,10 @@ import { ThrowStmt } from '@angular/compiler';
 export class CertificadosPage implements OnInit {
 cert: Cert[];
 msg : any;
+cores = "";
 cor: any;
-day: any;
+mail: any;
+certi : any[] = [];
 
   certification : any[] = [];
   
@@ -37,9 +39,12 @@ day: any;
 
 
   ngOnInit() {
-    this.service.getAll().subscribe(response => {
+     this.service.getAll().subscribe(response => {
       this.cert = response;
     });
+
+this.carregar();
+//this.mudarCor();
 
   }
 
@@ -98,6 +103,7 @@ day: any;
      // this.cert = this.cert.filter(idcert => idcert.id ! == id);
      this.service.getAll().subscribe(response => {
       this.cert = response;
+      //this.confirm();
      })
     })
   }
@@ -109,8 +115,32 @@ day: any;
       console.log(json);
     })
   }
-
-  
-
-
+  carregar(){
+    return new Promise(resolve => {
+     
+      this.service.getAll().subscribe((response) => {
+        this.certi = response;
+        this.certi.push(this.certi);
+        console.log(this.certi);
+        resolve(true);
+        let mail = [];
+      for(let i = 0; i < response.length; i++){
+        mail.push({
+          "id" : response[i].id,
+          "dias" : response[i].dias,
+          "email": response[i].email
+          
+        })
+        let id = response[i].id;
+        let dias = response[i].dias;
+        let email = response[i].email;
+        if(dias < 10){
+          this.enviarEmail(id, email);
+        }
+      }
+      })
+      
+    })
+  }
+ 
 }
